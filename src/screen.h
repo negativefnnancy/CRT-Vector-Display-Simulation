@@ -1,7 +1,7 @@
 #ifndef SCREEN_H
 #define SCREEN_H
 
-#include "buffer.h"
+#include "pixel_buffer.h"
 
 /* idealized input voltage when the power supply is plugged in */
 #define MAINS_AC_VOLTAGE 110
@@ -39,6 +39,6 @@ void power_off (screen_t *screen);
 void advance_screen (screen_t *screen, double delta_time);
 
 /* render the current state of the simulation onto a pixel buffer */
-void draw_screen (screen_t *screen, buffer_t *buffer);
+void draw_screen (screen_t *screen, pixel_buffer_t *buffer);
 
 #endif /* SCREEN_H */

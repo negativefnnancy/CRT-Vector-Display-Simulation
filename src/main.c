@@ -6,7 +6,7 @@
 
 #include "util.h"
 #include "screen.h"
-#include "buffer.h"
+#include "pixel_buffer.h"
 
 /* default window dimensions */
 #define WIDTH 640
@@ -26,7 +26,7 @@ int main (int argc, char **argv) {
     screen_t screen;
 
     /* the drawing buffer information */
-    buffer_t buffer;
+    pixel_buffer_t buffer;
 
     /* initialize SDL */
     if (SDL_Init (SDL_INIT_VIDEO) == -1)

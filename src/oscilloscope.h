@@ -2,7 +2,7 @@
 #define OSCILLOSCOPE_H
 
 #include "util.h"
-#include "buffer.h"
+#include "pixel_buffer.h"
 
 /* a sample with a variable delta time since previous sample */
 typedef struct sample_t {

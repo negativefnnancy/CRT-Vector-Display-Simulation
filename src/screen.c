@@ -38,7 +38,7 @@ void advance_screen (screen_t *screen, double delta_time) {
 
 }
 
-void draw_screen (screen_t *screen, buffer_t *buffer) {
+void draw_screen (screen_t *screen, pixel_buffer_t *buffer) {
 
     /* this is all just temporary, i just want to test the mains AC signal generator */
 }
