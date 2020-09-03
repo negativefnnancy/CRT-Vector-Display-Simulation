@@ -36,6 +36,7 @@ void draw_point (pixel_buffer_t *buffer, vec2_t position, color_t color) {
     blend_pixel (buffer,
                  int_x, int_y,
                  multiply_alpha (color, weight_x * weight_y));
+
     /* dont go out of bounds! */
     if (adj_x < buffer->width)
         blend_pixel (buffer,
@@ -48,6 +49,7 @@ void draw_point (pixel_buffer_t *buffer, vec2_t position, color_t color) {
         blend_pixel (buffer,
                      int_x, adj_y,
                      multiply_alpha (color, weight_x * adj_weight_y));
+
         /* dont go out of bounds! */
         if (adj_x < buffer->width)
             blend_pixel (buffer,

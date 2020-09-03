@@ -72,7 +72,7 @@ int main (int argc, char **argv) {
         clear_buffer (&buffer, make_color (0.1, 0.1, 0.1, 1));
 
         /* render the oscilloscope for debugging */
-        draw_oscilloscope (oscilloscope, &buffer);
+        draw_oscilloscope (oscilloscope, &buffer, 0.1, 170);
 
         /* render the current state of the simulation for this frame */
         SDL_LockSurface (surface);

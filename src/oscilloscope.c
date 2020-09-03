@@ -48,7 +48,17 @@ void log_sample_oscilloscope (oscilloscope_t *oscilloscope,
         = make_sample (value, delta_time);
 }
 
-void draw_oscilloscope (oscilloscope_t *oscilloscope, pixel_buffer_t *buffer) {
+void draw_oscilloscope (oscilloscope_t *oscilloscope, pixel_buffer_t *buffer,
+                        double x_scale, double y_scale) {
+
+    /* the end points on the line segment being drawn */
+    vec2_t a, b;
+
+    /* current index when iterating the samples */
+    int i;
+
+    /* the sample being read */
+    sample_t *sample;
 
     /* draw a horizontal line down the middle, marking the origin */
     double center_y = buffer->height / 2.0;
@@ -56,7 +66,21 @@ void draw_oscilloscope (oscilloscope_t *oscilloscope, pixel_buffer_t *buffer) {
                        make_vec2 (buffer->width, center_y),
                        make_color (1, 0, 0, 1));
 
-    draw_line (buffer, make_vec2 (0,             0),
-                       make_vec2 (buffer->width, buffer->height),
-                       make_color (1, 0, 0, 1));
+    /* iterate each sample
+     * by reading n_samples, the ring pointer will loop back around
+     * first get the initial sample */
+    sample = read_oscilloscope (oscilloscope);
+    a = make_vec2 (0, center_y - sample->value * center_y / y_scale);
+    for (i = 0; i < oscilloscope->n_samples - 1; i++) {
+
+        /* get the subsequent sample */
+        sample_t *sample = read_oscilloscope (oscilloscope);
+        b = make_vec2 (a.x + sample->delta_time * buffer->width / x_scale,
+                       center_y - sample->value * center_y / y_scale);
+    
+        /* draw the line and then shift the second end poit to be the 
+         * first endopoint of the line drawn in the following iteration */
+        draw_line (buffer, a, b, make_color (1 ,1, 1, 1));
+        a = b;
+    }
 }

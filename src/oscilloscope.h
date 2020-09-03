@@ -45,7 +45,10 @@ sample_t *read_oscilloscope (oscilloscope_t *oscilloscope);
 void log_sample_oscilloscope (oscilloscope_t *oscilloscope,
                               double value, double delta_time);
 
-/* render the oscilloscope to a pixel buffer */
-void draw_oscilloscope (oscilloscope_t *oscilloscope, pixel_buffer_t *buffer);
+/* render the oscilloscope to a pixel buffer
+ * horizontal scale is how many seconds fit on screen
+ * and the vertical scale is how many volts fit from center to top and bottom */
+void draw_oscilloscope (oscilloscope_t *oscilloscope, pixel_buffer_t *buffer,
+                        double x_scale, double y_scale);
 
 #endif /* OSCILLOSCOPE_H */
