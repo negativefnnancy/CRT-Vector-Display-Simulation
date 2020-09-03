@@ -1,6 +1,6 @@
 CC         := cc
 CFLAGS     := -Wall -Wpedantic -ansi -Og -g
-LDFLAGS    := $(shell pkg-config --cflags --libs sdl2)
+LDFLAGS    := $(shell pkg-config --cflags --libs sdl2) -lm
 BIN        := crt
 BUILD_DIR  := build
 SOURCE_DIR := src
