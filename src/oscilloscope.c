@@ -55,4 +55,8 @@ void draw_oscilloscope (oscilloscope_t *oscilloscope, pixel_buffer_t *buffer) {
     draw_line (buffer, make_vec2 (0,             center_y),
                        make_vec2 (buffer->width, center_y),
                        make_color (1, 0, 0, 1));
+
+    draw_line (buffer, make_vec2 (0,             0),
+                       make_vec2 (buffer->width, buffer->height),
+                       make_color (1, 0, 0, 1));
 }

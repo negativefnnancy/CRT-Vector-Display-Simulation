@@ -22,6 +22,12 @@ color_t make_white_with_alpha (double alpha);
 /* convert a packed pixel value of a given format into a normalized color value */
 color_t color_from_pixel (Uint32 pixel, SDL_PixelFormat *format);
 
+/* create a new color from an existing color by multiplying its alpha by a given value */
+color_t multiply_alpha (color_t color, double alpha);
+
+/* multiply two colors together */
+color_t multiply_blend (color_t source, color_t destination);
+
 /* perform alpha blending given the source and destination colors */
 color_t alpha_blend (color_t source, color_t destination);
 

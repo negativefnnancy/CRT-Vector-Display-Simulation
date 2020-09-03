@@ -62,3 +62,12 @@ void blend_pixel (pixel_buffer_t *buffer, int x, int y, color_t color) {
     /* write the new color over the old pixel value */
     set_pixel_color (buffer, x, y, new);
 }
+
+void clear_buffer (pixel_buffer_t *buffer, color_t color) {
+
+    /* iterate all the pixels in the buffer */
+    Uint32 pixel = make_pixel (buffer, color);
+    memset (buffer->pixels,
+            pixel,
+            buffer->format->BytesPerPixel * buffer->width * buffer->height);
+}

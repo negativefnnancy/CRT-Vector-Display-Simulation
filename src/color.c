@@ -27,14 +27,27 @@ color_t color_from_pixel (Uint32 pixel, SDL_PixelFormat *format) {
     return make_color (red / 255.0, green / 255.0, blue / 255.0, alpha / 255.0);
 }
 
+color_t multiply_alpha (color_t color, double alpha) {
+
+     return multiply_blend (color, make_white_with_alpha (alpha));
+}
+
+color_t multiply_blend (color_t source, color_t destination) {
+
+    return make_color (source.red   * destination.red,
+                       source.green * destination.green,
+                       source.blue  * destination.blue,
+                       source.alpha * destination.alpha);
+}
+
 color_t alpha_blend (color_t source, color_t destination) {
 
     /* alpha and compliment of alpha */
     double alpha      = source.alpha;
     double compliment = 1 - alpha;
 
-    return make_color (source.red * alpha + destination.red * compliment,
+    return make_color (source.red   * alpha + destination.red   * compliment,
                        source.green * alpha + destination.green * compliment,
-                       source.blue * alpha + destination.blue * compliment,
+                       source.blue  * alpha + destination.blue  * compliment,
                        destination.alpha + (1 - destination.alpha) * alpha);
 }

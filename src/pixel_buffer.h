@@ -49,4 +49,7 @@ color_t get_pixel_color (pixel_buffer_t *buffer, int x, int y);
  * and then overwrite that pixel with the new blended color */
 void blend_pixel (pixel_buffer_t *buffer, int x, int y, color_t color);
 
+/* clear a buffer with a solid color */
+void clear_buffer (pixel_buffer_t *buffer, color_t color);
+
 #endif /* PIXEL_BUFFER_H */

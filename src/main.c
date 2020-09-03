@@ -68,6 +68,9 @@ int main (int argc, char **argv) {
         surface = SDL_GetWindowSurface (window);
         buffer = make_buffer (surface->pixels, surface->w, surface->h, surface->format);
 
+        /* clear the screen with a background color */
+        clear_buffer (&buffer, make_color (0.1, 0.1, 0.1, 1));
+
         /* render the oscilloscope for debugging */
         draw_oscilloscope (oscilloscope, &buffer);
 
