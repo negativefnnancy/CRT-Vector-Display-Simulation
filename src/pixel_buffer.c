@@ -10,12 +10,12 @@ pixel_buffer_t make_buffer (void *pixels, int width, int height, SDL_PixelFormat
     return buffer;
 }
 
-Uint32 make_pixel (pixel_buffer_t *buffer, double r, double g, double b, double a) {
+Uint32 make_pixel (pixel_buffer_t *buffer, color_t color) {
 
-    return SDL_MapRGBA (buffer->format, r * 255,
-                                        g * 255,
-                                        b * 255,
-                                        a * 255);
+    return SDL_MapRGBA (buffer->format, color.red   * 255,
+                                        color.green * 255,
+                                        color.blue  * 255,
+                                        color.alpha * 255);
 }
 
 void *get_pixel_address (pixel_buffer_t *buffer, size_t index) {
@@ -36,9 +36,29 @@ void set_pixel (pixel_buffer_t *buffer, int x, int y, Uint32 pixel) {
     memcpy (destination, &pixel, buffer->format->BytesPerPixel);
 }
 
-void set_pixel_rgba (pixel_buffer_t *buffer,
-                     int x, int y,
-                     double r, double g, double b, double a) {
+Uint32 get_pixel (pixel_buffer_t *buffer, int x, int y) {
 
-    set_pixel (buffer, x, y, make_pixel (buffer, r, g, b, a));
+    return *((Uint32 *) get_pixel_address_from_coordinates (buffer, x, y));
+}
+
+void set_pixel_color (pixel_buffer_t *buffer, int x, int y, color_t color) {
+
+    set_pixel (buffer, x, y, make_pixel (buffer, color));
+}
+
+color_t get_pixel_color (pixel_buffer_t *buffer, int x, int y) {
+
+    return color_from_pixel (get_pixel (buffer, x, y), buffer->format);
+}
+
+void blend_pixel (pixel_buffer_t *buffer, int x, int y, color_t color) {
+
+    /* get the existing color at the pixel destination */
+    color_t existing = get_pixel_color (buffer, x, y);
+
+    /* blend the new color on top of the existing color */
+    color_t new = alpha_blend (color, existing);
+
+    /* write the new color over the old pixel value */
+    set_pixel_color (buffer, x, y, new);
 }
