@@ -13,9 +13,6 @@
 #define WIDTH 640
 #define HEIGHT 480
 
-/* the number of samples that the oscilloscope can hold in memory */
-#define OSCILLOSCOPE_RESOLUTION 1024
-
 int main (int argc, char **argv) {
 
     /* SDL stuff */
@@ -23,17 +20,11 @@ int main (int argc, char **argv) {
     SDL_Surface *surface;
     SDL_Event event;
 
-    /* amount of time (seconds) since last frame */
-    double delta_time;
-
     /* the simulation state */
     screen_t *screen;
 
     /* the drawing buffer information */
     pixel_buffer_t buffer;
-
-    /* an oscilloscope for debugging */
-    oscilloscope_t *oscilloscope;
 
     /* initialize SDL */
     if (SDL_Init (SDL_INIT_VIDEO) == -1)
@@ -47,15 +38,8 @@ int main (int argc, char **argv) {
                                      SDL_WINDOW_SHOWN | SDL_WINDOW_RESIZABLE)))
         die_with_message ("Failed to create SDL window: %s\n", SDL_GetError ());
 
-    /* create the oscilloscope */
-    oscilloscope = create_oscilloscope (OSCILLOSCOPE_RESOLUTION);
-
     /* create the simulation */
-    /* TODO */
-
-    /* this is TEMPORARY!! TODO remove */
-    double time = 0;
-    int i;
+    screen = create_screen (get_time ());
 
     /* main event loop */
     for (;;) {
@@ -75,35 +59,24 @@ int main (int argc, char **argv) {
         /* clear the screen with a background color */
         clear_buffer (&buffer, make_color (0.1, 0.1, 0.1, 1));
 
-        /* render the oscilloscope for debugging */
-        draw_oscilloscope (oscilloscope, &buffer, 0.1, 170);
-
         /* render the current state of the simulation for this frame */
         SDL_LockSurface (surface);
-        draw_screen (screen, &buffer);
+        draw_screen              (screen, &buffer);
+        draw_screen_oscilloscope (screen, &buffer); /* for debugging simulated signals */
         SDL_UnlockSurface (surface);
         SDL_UpdateWindowSurface (window);
 
         /* advance the simulation for the next frame */
-        delta_time = 1.0 / 60; /* TODO: a real delta time */
-        advance_screen (screen, delta_time);
+        advance_screen (screen, get_time ());
+        /*advance_screen (screen, screen->last_time + 1 / 60.0);*//*TODO temporyr */
 
-        /* TEMPORARY TODO REMOVE */
-        /* testing the oscilloscope!! */
-        for (i = 0; i < 100; i++) {
-
-            double dt = delta_time / 100;
-            log_sample_oscilloscope (oscilloscope,
-                                     generate_mains_ac_signal (time + i * dt, 120, 60, 0.05),
-                                     dt);
-        }
-        time += delta_time;
+        /* TODO: temporary artificial fps limiter */
+        SDL_Delay (1000 / 60.0);
     }
 quit:
 
     /* cleanup and exit */
-    /* TODO: destroy the simulation */
-    destroy_oscilloscope (oscilloscope);
+    destroy_screen (screen);
     SDL_DestroyWindow (window);
     SDL_Quit ();
     return EXIT_SUCCESS;

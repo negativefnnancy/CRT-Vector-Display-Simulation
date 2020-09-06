@@ -17,4 +17,7 @@ void init_noise ();
 /* traverse a ring buffer */
 void *traverse_ring_buffer (void *buffer, size_t n_items, size_t size, void **pointer);
 
+/* return current time in seconds */
+double get_time ();
+
 #endif /* UTIL_H */

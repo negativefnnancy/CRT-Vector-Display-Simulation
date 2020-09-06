@@ -1,7 +1,23 @@
+#include <stdlib.h>
 #include <math.h>
 
 #include "screen.h"
 #include "util.h"
+
+screen_t *create_screen (double time) {
+
+    screen_t *screen = (screen_t *) calloc (1, sizeof (screen_t));
+    screen->oscilloscope = create_oscilloscope (OSCILLOSCOPE_N_SIGNALS,
+                                                OSCILLOSCOPE_MEMORY);
+    screen->last_time = time;
+    return screen;
+}
+
+void destroy_screen (screen_t *screen) {
+
+    destroy_oscilloscope (screen->oscilloscope);
+    free (screen);
+}
 
 double generate_mains_ac_signal (double time, double rms, double frequency, double noise) {
 
@@ -34,12 +50,35 @@ void power_off (screen_t *screen) {
     screen->ideal_mains_ac_voltage = 0;
 }
 
-void advance_screen (screen_t *screen, double delta_time) {
+void advance_screen (screen_t *screen, double time) {
 
+    int i;
+
+    /* calculate delta time since last advance */
+    double last_time = screen->last_time;
+    double delta_time = time - last_time;
+
+    /* testing the oscilloscope!! */
+    for (i = 0; i < 100; i++) {
+
+        double dt = delta_time / 100;
+        printf ("%f\n", dt);
+        log_sample_oscilloscope (screen->oscilloscope, 0,
+                                 generate_mains_ac_signal (last_time + i * dt, 120, 60, 0.05),
+                                 dt);
+    }
+
+    /* save the last time */
+    screen->last_time = time;
 }
 
 void draw_screen (screen_t *screen, pixel_buffer_t *buffer) {
 
-    /* this is all just temporary, i just want to test the mains AC signal generator */
 }
 
+void draw_screen_oscilloscope (screen_t *screen, pixel_buffer_t *buffer) {
+
+    /* render the oscilloscope for debugging */
+    draw_oscilloscope (screen->oscilloscope, buffer, OSCILLOSCOPE_TIME_SCALE,
+                                                     OSCILLOSCOPE_VOLTAGE_SCALE);
+}

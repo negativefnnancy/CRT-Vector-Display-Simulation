@@ -41,3 +41,10 @@ void *traverse_ring_buffer (void *buffer, size_t n_items, size_t size, void **po
     /* return the old pointer value for convenience's sake */
     return old_pointer;
 }
+
+double get_time () {
+
+    struct timespec spec;
+    clock_gettime (CLOCK_MONOTONIC, &spec);
+    return spec.tv_sec + spec.tv_nsec / 1000000000.0;
+}
