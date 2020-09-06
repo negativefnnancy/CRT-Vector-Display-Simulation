@@ -13,10 +13,10 @@ double generate_mains_ac_signal (double time, double rms, double frequency, doub
     peak_voltage = sqrt (2) * rms;
 
     /* calculate the ideal sine waveform */
-    pure_signal = sin (time * 2 * M_PI) * peak_voltage;
+    pure_signal = sin (time * 2 * M_PI * frequency) * peak_voltage;
 
     /* get the noise component */
-    noise_signal = white_noise () * pure_signal;
+    noise_signal = white_noise () * pure_signal * noise;
 
     /* dirty up the signal LOL */
     return pure_signal + noise_signal;

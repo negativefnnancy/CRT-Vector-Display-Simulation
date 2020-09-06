@@ -53,6 +53,10 @@ int main (int argc, char **argv) {
     /* create the simulation */
     /* TODO */
 
+    /* this is TEMPORARY!! TODO remove */
+    double time = 0;
+    int i;
+
     /* main event loop */
     for (;;) {
 
@@ -83,6 +87,17 @@ int main (int argc, char **argv) {
         /* advance the simulation for the next frame */
         delta_time = 1.0 / 60; /* TODO: a real delta time */
         advance_screen (screen, delta_time);
+
+        /* TEMPORARY TODO REMOVE */
+        /* testing the oscilloscope!! */
+        for (i = 0; i < 100; i++) {
+
+            double dt = delta_time / 100;
+            log_sample_oscilloscope (oscilloscope,
+                                     generate_mains_ac_signal (time + i * dt, 120, 60, 0.05),
+                                     dt);
+        }
+        time += delta_time;
     }
 quit:
 

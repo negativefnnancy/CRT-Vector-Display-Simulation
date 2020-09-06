@@ -1,8 +1,11 @@
+#include <stdbool.h>
 #include <math.h>
 
 #include "drawing.h"
 
 void draw_point (pixel_buffer_t *buffer, vec2_t position, color_t color) {
+
+    /* TODO: think abt the efficiency of this bounds checking more !! */
 
     /* the integer components of the coordinates */
     double int_x, int_y;
@@ -16,6 +19,9 @@ void draw_point (pixel_buffer_t *buffer, vec2_t position, color_t color) {
     /* the weights for distributing the color across the pixels being drawn to */
     double weight_x, weight_y, adj_weight_x, adj_weight_y;
 
+    /* whether each coordinate is in bounds */
+    bool int_x_in_bounds, int_y_in_bounds, adj_x_in_bounds, adj_y_in_bounds;
+
     /* separate out the integer and fractional components of the coordinates */
     int_x = floor (position.x);
     int_y = floor (position.y);
@@ -26,6 +32,12 @@ void draw_point (pixel_buffer_t *buffer, vec2_t position, color_t color) {
     adj_x = int_x + 1;
     adj_y = int_y + 1;
 
+    /* calculate whether they are in bounds */
+    int_x_in_bounds = int_x >= 0 && int_x < buffer->width;
+    int_y_in_bounds = int_y >= 0 && int_y < buffer->height;
+    adj_x_in_bounds = adj_x >= 0 && adj_x < buffer->width;
+    adj_y_in_bounds = adj_y >= 0 && adj_y < buffer->height;
+
     /* calculate the weights */
     weight_x = 1 - frac_x;
     weight_y = 1 - frac_y;
@@ -33,29 +45,25 @@ void draw_point (pixel_buffer_t *buffer, vec2_t position, color_t color) {
     adj_weight_y = frac_y;
 
     /* paint the pixel values */
-    blend_pixel (buffer,
-                 int_x, int_y,
-                 multiply_alpha (color, weight_x * weight_y));
+    if (int_x_in_bounds && int_y_in_bounds)
+        blend_pixel (buffer,
+                     int_x, int_y,
+                     multiply_alpha (color, weight_x * weight_y));
 
-    /* dont go out of bounds! */
-    if (adj_x < buffer->width)
+    if (adj_x_in_bounds && int_y_in_bounds)
         blend_pixel (buffer,
                      adj_x, int_y,
                      multiply_alpha (color, adj_weight_x * weight_y));
 
-    /* dont go out of bounds! */
-    if (adj_y < buffer->height) {
-
+    if (int_x_in_bounds && adj_y_in_bounds)
         blend_pixel (buffer,
                      int_x, adj_y,
                      multiply_alpha (color, weight_x * adj_weight_y));
 
-        /* dont go out of bounds! */
-        if (adj_x < buffer->width)
-            blend_pixel (buffer,
-                         adj_x, adj_y,
-                         multiply_alpha (color, adj_weight_x * adj_weight_y));
-    }
+    if (adj_x_in_bounds && adj_y_in_bounds)
+        blend_pixel (buffer,
+                     adj_x, adj_y,
+                     multiply_alpha (color, adj_weight_x * adj_weight_y));
 }
 
 void draw_line (pixel_buffer_t *buffer, vec2_t a, vec2_t b, color_t color) {
